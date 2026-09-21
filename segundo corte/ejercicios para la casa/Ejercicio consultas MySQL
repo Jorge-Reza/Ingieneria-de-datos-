@@ -1,0 +1,145 @@
+create database prueba;
+use prueba;
+
+create table departamento(
+id int primary key,
+nombre varchar(50) not null,
+ubicacion varchar(50),
+presupuestoAnual decimal(14,2) default 0
+);
+
+create table empleados(
+id int primary key,
+nombre varchar(20) not null,
+apellido varchar(20) not null,
+edad int,
+salario decimal(10,2),
+fechaContratacion date,
+idDepartamento int,
+constraint fk_emp_depto foreign key (idDepartamento)
+references departamento(id)
+);
+
+insert into departamento (id,nombre,ubicacion,presupuestoAnual) values
+(1,'Ventas','Piso 1',500000),
+(2,'IT','Piso 2',800000),
+(3,'Recursos Humanos','Piso 3',300000),
+(4,'Finanzas','Piso 4',400000);
+
+insert into empleados (id,nombre,apellido,edad,salario,fechaContratacion,idDepartamento) values
+(1,'Ana','Perez',28,3500.00,'2019-05-10',1),
+(2,'Carlos','Gomez',35,4500.00,'2021-03-15',2),
+(3,'Andrea','Ruiz',42,5000.00,'2018-07-20',1),
+(4,'Luis','Martinez',31,3800.00,'2022-01-10',3),
+(5,'Cristina','Lopez',38,4200.00,'2020-11-05',2),
+(6,'Pedro','Sanchez',45,6000.00,'2017-02-28',4),
+(7,'Alberto','Diaz',29,3200.00,'2023-06-01',1),
+(8,'Marta','Fernandez',33,4100.00,'2021-09-12',3);
+
+-- 1. Lista de empleados usando funciones de cadena
+select
+concat(nombre, ' ', apellido) as nombreCompleto,
+upper(nombre) as nombreMayuscula,
+lower(apellido) as apellidoMinuscula,
+length(nombre) as largoNombre,
+edad,
+salario
+from empleados;
+
+-- 2. Altos ingresos con funcion numerica round
+select nombre, salario,
+round(salario * 1.10, 2) as salarioConAumento,
+truncate(salario / 12, 2) as salarioMensual,
+mod(salario, 1000) as residuoMil
+from empleados
+where salario > 4000;
+
+-- 3. Fuerza de ventas con funciones de fecha y condicional
+select e.nombre, e.apellido, e.salario,
+year(e.fechaContratacion) as anioIngreso,
+datediff(curdate(), e.fechaContratacion) as diasEnEmpresa,
+case
+    when e.salario < 3500 then 'Junior'
+    when e.salario between 3500 and 4500 then 'Semi'
+    else 'Senior'
+end as categoriaSalarial
+from empleados e
+inner join departamento d on e.idDepartamento = d.id
+where d.nombre = 'Ventas';
+
+-- 4. Rango de edad con funcion calculada
+select nombre, apellido, edad,
+round((edad / 10), 1) as decadaEdad,
+case
+    when edad between 30 and 35 then 'Treinta y algo'
+    when edad between 36 and 40 then 'Cerca de cuarenta'
+end as grupoEtario
+from empleados
+where edad between 30 and 40;
+
+-- 5. Nuevas contrataciones con funciones de fecha
+select nombre, apellido,
+fechaContratacion,
+year(fechaContratacion) as anio,
+month(fechaContratacion) as mes,
+day(fechaContratacion) as dia,
+date_format(fechaContratacion, '%d/%m/%Y') as fechaFormateada
+from empleados
+where year(fechaContratacion) > 2020;
+
+-- 6. Distribucion por departamento con funciones de agregacion y cadena
+select
+upper(d.nombre) as departamento,
+count(e.id) as totalEmpleados,
+sum(e.salario) as nominaTotal,
+round(avg(e.salario), 2) as salarioPromedio,
+max(e.salario) as salarioMaximo,
+min(e.salario) as salarioMinimo
+from departamento d
+left join empleados e on d.id = e.idDepartamento
+group by d.id, d.nombre
+order by totalEmpleados desc;
+
+-- 7. Analisis salarial con funciones calculadas y conversion
+select
+count(*) as totalEmpleados,
+round(avg(salario), 2) as salarioPromedio,
+round(sum(salario), 2) as nominaTotal,
+max(salario) as masAlto,
+min(salario) as masBajo,
+format(avg(salario), 2) as promedioFormateado,
+cast(avg(salario) as signed) as promedioEntero
+from empleados;
+
+-- 8. Nombres selectivos con funciones de cadena
+select
+nombre,
+upper(nombre) as nombreMayuscula,
+concat(substring(nombre, 1, 1), '.') as inicial,
+replace(nombre, 'a', '@') as nombreReemplazado
+from empleados
+where nombre like 'A%' or nombre like 'C%';
+
+-- 9. Empleados que NO son de IT con coalesce y condicionales
+select e.nombre, e.apellido,
+coalesce(d.nombre, 'Sin departamento') as departamento,
+ifnull(d.ubicacion, 'Sin ubicacion') as ubicacion,
+case
+    when d.presupuestoAnual > 400000 then 'Alto presupuesto'
+    else 'Presupuesto normal'
+end as categoriaPresupuesto
+from empleados e
+inner join departamento d on e.idDepartamento = d.id
+where d.nombre <> 'IT';
+
+-- 10. El mejor pagado con funciones combinadas
+select
+concat(nombre, ' ', apellido) as empleado,
+salario,
+round(salario / 30, 2) as salarioDiario,
+round(salario / 240, 2) as salarioHora,
+year(fechaContratacion) as anioIngreso,
+datediff(curdate(), fechaContratacion) as diasAntiguedad
+from empleados
+order by salario desc
+limit 1;
