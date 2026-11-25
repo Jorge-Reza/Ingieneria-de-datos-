@@ -1,0 +1,82 @@
+{
+  "pregunta_1_ventas_por_metodo_pago": [
+    {
+      "_id": "tarjeta",
+      "total_ventas": 398000,
+      "cantidad_pedidos": 7
+    },
+    {
+      "_id": "efectivo",
+      "total_ventas": 179000,
+      "cantidad_pedidos": 3
+    },
+    {
+      "_id": "nequi",
+      "total_ventas": 163000,
+      "cantidad_pedidos": 3
+    }
+  ],
+  "pregunta_2_pedidos_cancelados": [
+    {
+      "pedidos_cancelados": 3
+    }
+  ],
+  "pregunta_3_menu_por_restaurante": [
+    {
+      "_id": "R01",
+      "menu_disponible": [
+        "Arepa de choclo con queso",
+        "Arepa rellena de carne",
+        "Jugo de lulo"
+      ],
+      "precio_maximo": 14000
+    },
+    {
+      "_id": "R02",
+      "menu_disponible": [
+        "Combo Sake",
+        "Ramen tonkotsu",
+        "Té verde"
+      ],
+      "precio_maximo": 41000
+    },
+    {
+      "_id": "R03",
+      "menu_disponible": [
+        "Pizza hawaiana mediana",
+        "Pizza margarita grande"
+      ],
+      "precio_maximo": 38000
+    }
+  ],
+  "pregunta_4_productos_por_tipo": [
+    {
+      "_id": "acompañamiento",
+      "precio_promedio": 8000,
+      "total_productos": 2
+    },
+    {
+      "_id": "bebida",
+      "precio_promedio": 6900,
+      "total_productos": 5
+    },
+    {
+      "_id": "plato",
+      "precio_promedio": 31916.666666666668,
+      "total_productos": 18
+    },
+    {
+      "_id": "postre",
+      "precio_promedio": 9000,
+      "total_productos": 1
+    }
+  ],
+  "pregunta_5_top3_clientes": [],
+  "pregunta_6_restaurantes_ventas_gt_70000": [
+    {
+      "_id": null,
+      "ventas_entregadas": 740000
+    }
+  ],
+  "pregunta_7_pedidos_pendientes_en_camino": []
+}
